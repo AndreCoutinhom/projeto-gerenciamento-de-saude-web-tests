@@ -7,6 +7,8 @@ body{min-height:100vh;display:flex;align-items:center;justify-content:center;bac
 .scroll{flex:1;overflow-y:auto}
 svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 button{font-family:inherit;cursor:pointer;border:0;background:none}
+/* acesso pelo teclado (ajuda quem usa leitor de tela) */
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--orange);outline-offset:3px;border-radius:14px}
 /* header */
 .hdr{background:var(--blue);padding:56px 24px 20px;color:#fff}
 .hdr .top{display:flex;justify-content:space-between;align-items:center}
