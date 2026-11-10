@@ -14,6 +14,8 @@ const P={
  loc:'<path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
  steth:'<path d="M6 3v6a4 4 0 0 0 8 0V3M10 13v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/>',
  home:'<path d="M4 11l8-7 8 7v9H4z"/>'
+ login:'<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>',
+ adduser:'<circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4"/><path d="M19 8v6M16 11h6"/>'
 };
 const icon=(n,s=24)=>`<svg class="i" width="${s}" height="${s}" viewBox="0 0 24 24">${P[n]}</svg>`;
 const logo=(s=44)=>`<svg width="${s}" height="${s}" viewBox="0 0 60 60"><rect width="60" height="60" rx="18" fill="#fff"/><rect x="24" y="12" width="12" height="36" rx="3" fill="#1636A8"/><rect x="12" y="24" width="36" height="12" rx="3" fill="#1636A8"/><polyline points="8,32 20,32 25,22 32,42 37,32 52,32" fill="none" stroke="#F57C00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -71,17 +73,14 @@ const appointments=[
 /* ---------- Componentes ---------- */
 const header=(title,{back=false,profile=true}={})=>`
 <div><div class="hdr"><div class="top"><div class="left">
- ${back?`<button class="circle" data-go="login" aria-label="Voltar para a tela anterior">${icon('back')}</button>`:''}${logo()}</div>
- <button class="circle" aria-label="Ver avisos">${icon('bell')}</button></div>
+ ${back?`<button class="circle" data-go="login">${icon('back')}</button>`:''}${logo()}</div>
+ <button class="circle">${icon('bell')}</button></div>
  <h1>${title}</h1>
- ${profile?`<button class="profile" aria-label="Trocar de perfil">${icon('swap',20)}<span>Trocar perfil</span></button>`:''}
+ ${profile?`<button class="profile">${icon('swap',20)}<span>Trocar perfil</span></button>`:''}
 </div><div class="line"></div></div>`;
 
-const tabs=cur=>`<nav class="tabs">${[
- ['home','Início','home','Ir para a tela de início'],
- ['meds','Remédios','pill','Ir para a lista de remédios'],
- ['appts','Consultas','steth','Ir para a lista de consultas']
-].map(([k,l,i,a])=>`<button class="tab ${cur===k?'on':''}" data-go="${k}" aria-label="${a}">${icon(i)}<span>${l}</span></button>`).join('')}</nav>`;
+const tabs=cur=>`<nav class="tabs">${[['home','Início','home'],['meds','Remédios','pill'],['appts','Consultas','steth']]
+ .map(([k,l,i])=>`<button class="tab ${cur===k?'on':''}" data-go="${k}">${icon(i)}<span>${l}</span></button>`).join('')}</nav>`;
 
 const shell=(cur,body)=>`${body}${tabs(cur)}`;
 
@@ -91,14 +90,13 @@ login:()=>`
 <div class="login-head">${logo()}<div class="txt"><div class="brand">A<span>&amp;</span>F</div><div class="sub">Health Management</div></div></div>
 <div class="line"></div>
 <div class="scroll pad">
- <div class="help">${icon('help',32)}<div>Dúvidas no acesso? Veja o passo a passo.<a href="#" aria-label="Abrir o manual de ajuda">Acessar manual.</a></div></div>
- <label>E-mail</label><input type="email" placeholder="Digite seu e-mail" autocapitalize="none" aria-label="Digite seu e-mail">
- <div class="pw"><label>Senha</label><a href="#" aria-label="Recuperar minha senha">Esqueci minha senha</a></div>
- <input type="password" placeholder="Digite sua senha" aria-label="Digite sua senha">
- <button class="btn fill" style="margin-top:8px" aria-label="Entrar com a sua digital"><span>Entrar com biometria</span>${icon('finger',22)}</button>
- <button class="btn ob" data-go="home" aria-label="Entrar no aplicativo">Entrar</button>
+ <div class="help">${icon('help',32)}<div>Dúvidas no acesso? Veja o passo a passo.<a href="#">Acessar manual.</a></div></div>
+ <label>E-mail</label><input type="email" placeholder="Digite seu e-mail" autocapitalize="none">
+ <div class="pw"><label>Senha</label><a href="#">Esqueci minha senha</a></div>
+ <input type="password" placeholder="Digite sua senha">
+ <button class="btn fill" style="margin-top:8px" data-go="home"><span>Entrar</span>${icon('login',22).replace('<svg','<svg style="color:#fff"')}</button>
  <p class="reg">Ainda não é cadastrado?</p>
- <button class="btn oo" data-go="signup" aria-label="Fazer o cadastro">Fazer cadastro</button>
+ <button class="btn oo" data-go="signup"><span>Fazer cadastro</span>${icon('adduser',22)}</button>
 </div>`,
 
 signup:()=>`${header('Cadastro',{back:true,profile:false})}<div class="scroll"></div>`,
@@ -115,7 +113,7 @@ home:()=>{
  ${now?`<div class="lbl" style="color:var(--orangeText)">Agora</div>
  <div class="now"><div class="row"><div class="box">${icon('pill',28)}</div>
   <div class="t"><div class="nm">${now.title}</div><div class="dt">Às ${formatTime(now.scheduledAt)}</div></div></div>
-  <button class="btn fill taken" data-taken="${now.confirmationId}" aria-label="Marcar remédio como tomado"><span>Já tomei</span>${icon('check',22).replace('<svg','<svg style="color:#fff"')}</button></div>`:''}
+  <button class="btn fill taken" data-taken="${now.confirmationId}"><span>Já tomei</span>${icon('check',22).replace('<svg','<svg style="color:#fff"')}</button></div>`:''}
  <div class="lbl" style="color:var(--blue)">Hoje</div>
  ${rest.map(i=>`<div class="item"><div class="top"><span class="tm">${formatTime(i.scheduledAt)}</span>${chip(i)}</div><div class="nm">${i.title}</div></div>`).join('')}
  </div>`);
@@ -128,7 +126,7 @@ meds:()=>shell('meds',`${header('Remédios')}<div class="scroll content" style="
   <div class="d" style="margin-top:4px">Princípio ativo: ${m.details.activeIngredient}</div>
   <div class="d" style="margin-top:2px">${icon('time',20)}<span>${joinTimes(getDailyTimes(m.startAt,m.intervalValue,m.intervalUnit))}</span></div>
   <span class="tag ${n?'n':'s'}">${STRIPE_LABELS[m.details.stripe]??STRIPE_LABELS.OTHER}</span></div></div>`}).join('')}
- </div><div class="foot"><button class="btn fill" aria-label="Cadastrar novo remédio">${icon('add',26).replace('<svg','<svg style="color:#fff"')}<span>Novo remédio</span></button></div>`),
+ </div><div class="foot"><button class="btn fill">${icon('add',26).replace('<svg','<svg style="color:#fff"')}<span>Novo remédio</span></button></div>`),
 
 appts:()=>shell('appts',`${header('Consultas')}<div class="scroll content" style="padding-bottom:16px">
  ${appointments.map(a=>`
@@ -136,7 +134,7 @@ appts:()=>shell('appts',`${header('Consultas')}<div class="scroll content" style
   <div class="nm">${a.details.doctorName}</div>
   <div class="d">${icon('loc',20)}<span>${a.details.location}</span></div>
   <div class="d">${icon('cal',20)}<span>${formatDate(a.startAt)} · ${formatTime(a.startAt)}</span></div></div></div>`).join('')}
- </div><div class="foot"><button class="btn fill" aria-label="Cadastrar nova consulta">${icon('add',26).replace('<svg','<svg style="color:#fff"')}<span>Nova consulta</span></button></div>`)
+ </div><div class="foot"><button class="btn fill">${icon('add',26).replace('<svg','<svg style="color:#fff"')}<span>Nova consulta</span></button></div>`)
 };
 
 /* ---------- Navegação ---------- */
